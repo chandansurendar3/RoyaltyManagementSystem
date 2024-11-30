@@ -20,6 +20,64 @@ import {Button, Form} from "react-bootstrap";
 
 export const Account = () => {
   const { userid } = useParams();
+  //Bank Form state variables
+  const [isFormVisible, setIsFormVisible] = useState(false);
+  const [bankDetails, setBankDetails] = useState({
+    userId: userid,
+    accountNumber: "",
+    username: "",
+    bankName: "",
+  });
+  const [message, setMessage] = useState("");
+// Toggle form visibility
+const toggleForm = () => {
+  setIsFormVisible(!isFormVisible);
+  setMessage("");
+  setBankDetails({
+    userId: userid,
+    accountNumber: "",
+    username: "",
+    bankName: "",
+  });
+};
+
+ // Handle form input changes
+ const handleChange = (e) => {
+  const { name, value } = e.target;
+  setBankDetails((prevDetails) => ({
+    ...prevDetails,
+    [name]: value,
+  }));
+};
+
+
+  // Handle form submission to save data
+  const handleSubmitBankForm = async (e) => {
+    e.preventDefault();
+    setMessage("");
+
+    try {
+      const response = await fetch(`http://localhost:8090/bankDetails/addBankDetails/${userId}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(bankDetails),
+      });
+
+      if (!response.ok) {
+        throw new Error(`Error: ${response.status} - ${response.statusText}`);
+      }
+
+      setMessage("Bank details saved successfully!");
+      setIsFormVisible(false); // Hide the form after submission
+    } catch (err) {
+      setMessage(`Failed to save bank details: ${err.message}`);
+    }
+  };
+
+
+//Artist and Manager agreement state variables
   console.log(userid)
   const userId = userid;
   const [show, setShow] = useState(false);
@@ -46,6 +104,8 @@ export const Account = () => {
   };
   const navigate = useNavigate();
   const handleShowone = () => setShowone(true);
+
+  //User Details state variables
   const [userDetails, setUserDetails] = useState({});
   
     const [artistDetails, setArtistDetails] = useState({});
@@ -292,7 +352,9 @@ export const Account = () => {
     navigate(`/transaction/${userId}`);
   };
 
-   
+  const handleBack = () => {
+    navigate(-1); // Navigate back to the previous page
+  };
 
     
 
@@ -305,7 +367,11 @@ export const Account = () => {
           <title> About | {meta.title}</title>
           <meta name="description" content={meta.description} />
         </Helmet>
-
+        {/* Back Button */}
+        <button onClick={handleBack} >
+          Back
+        </button>
+          
         <div className="intro_sec d-block d-lg-flex align-items-center">
           <div
             className="h_bg-image order-1 order-lg-2 h-25 "
@@ -317,7 +383,6 @@ export const Account = () => {
                 <h2 className="mb-1x">Profile</h2>
                 <br></br>
                 <div>
-            <h2>User Details</h2>
             <p>User ID: {userId}</p>
             <p>Username: {username}</p>
             {/* <p>Username: {userDetails.username}</p> */}
@@ -349,7 +414,7 @@ export const Account = () => {
  
             {userType === 'ARTIST' && (
                 <div>
-                    <h2>Artist Details</h2>
+                    
                     <div>
                         <h3>Country</h3>
                         {!editing.country ? (
@@ -405,6 +470,7 @@ export const Account = () => {
                         <Button className="ac_btn" variant="primary" onClick={handleShow}>
                 Add
               </Button>
+
             )}
               
       
@@ -418,7 +484,7 @@ export const Account = () => {
  
             {userType === 'MANAGER' && (
                 <div>
-                    <h2>Manager Details</h2>
+                    
                      <div>
                         <h3>Company</h3>
                         {!editing.company ? (
@@ -447,6 +513,64 @@ export const Account = () => {
                 </div>
             )}
             <Button onClick={handlepass}>change password</Button>
+          
+
+      <button onClick={toggleForm}>
+        {isFormVisible ? "Close Form" : "Add Bank Details"}
+      </button>
+
+      {isFormVisible && (
+        <form onSubmit={handleSubmitBankForm}>
+          {/* <div>
+            <label htmlFor="userId">User ID:</label>
+            <input
+              type="number"
+              id="userId"
+              name="userId"
+              value={bankDetails.userId}
+              onChange={handleChange}
+              required
+            />
+          </div> */}
+          <div>
+            <label htmlFor="accountNumber">Account Number:</label>
+            <input
+              type="text"
+              id="accountNumber"
+              name="accountNumber"
+              value={bankDetails.accountNumber}
+              onChange={handleChange}
+              required
+            />
+          </div>
+          <div>
+            <label htmlFor="username">Username:</label>
+            <input
+              type="text"
+              id="username"
+              name="username"
+              value={bankDetails.username}
+              onChange={handleChange}
+              required
+            />
+          </div>
+          <div>
+            <label htmlFor="bankName">Bank Name:</label>
+            <input
+              type="text"
+              id="bankName"
+              name="bankName"
+              value={bankDetails.bankName}
+              onChange={handleChange}
+              required
+            />
+          </div>
+          <button type="submit">Save Details</button>
+        </form>
+      )}
+
+      {message && <p className="message">{message}</p>}
+            
         </div>
               </div>
             </div>

@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Helmet, HelmetProvider } from "react-helmet-async";
-import { useParams } from "react-router-dom";
+import { useParams,useNavigate } from "react-router-dom";
 import './style.css';
 import Headermain from '../../header';
 
@@ -10,6 +10,8 @@ const Notificationman = ({ notificationsLength }) => {
   const [notifications, setNotifications] = useState([]);
   const { userid } = useParams();
   const managerId = userid;
+  const navigate = useNavigate(); // Initialize navigate
+
 
   useEffect(() => {
     const fetchNotifications = async () => {
@@ -108,6 +110,9 @@ const Notificationman = ({ notificationsLength }) => {
       console.error('Error rejecting contract:', error);
     }
   };
+  const handleBack = () => {
+    navigate(-1); // Navigate back to the previous page
+  };
 
   return (
     <HelmetProvider>
@@ -116,6 +121,11 @@ const Notificationman = ({ notificationsLength }) => {
           <meta charSet="utf-8" />
           <title>Notification</title>
         </Helmet>
+
+         {/* Back Button */}
+         <button onClick={handleBack} >
+          Back
+        </button>
 
         <div className="notifications-list">
           {notifications.map(notification => (

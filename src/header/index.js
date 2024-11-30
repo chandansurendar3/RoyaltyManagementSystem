@@ -72,9 +72,14 @@ const Headermain = ({ page, notificationsLength }) => {
             {page === "managerDash" && (
               <div className="menu__wrapper">
                 <ul className="the_menu">
-                  <li className="menu_item">
+                  {/* <li className="menu_item">
                     <Link onClick={handleToggle} to="/managerdash" className="my-3">
                       Dashboard
+                    </Link>
+                  </li> */}
+                  <li className="menu_item">
+                    <Link onClick={handleToggle} to={`/account/${userid}`} className="my-3">
+                      Account
                     </Link>
                   </li>
                   <li className="menu_item">

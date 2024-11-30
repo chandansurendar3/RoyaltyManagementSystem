@@ -171,12 +171,12 @@ export const ManagerDash = () => {
         <div className="card-containeroo">
           <div className="cardoo" onClick={handleButtonClick}>
             <div className="card-bodyoo">
-              <h5 className="card-title">Go to Account</h5>
+              <h5 className="card-title"> Account</h5>
             </div>
           </div>
           <div className="cardoo" onClick={handleButtonClickTransaction}>
             <div className="card-bodyoo">
-              <h5 className="card-title">Go to Transaction History</h5>
+              <h5 className="card-title">Transactions</h5>
             </div>
           </div>
         </div>
